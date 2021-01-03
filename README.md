@@ -1,4 +1,5 @@
-# TFT-MoodeCoverArt 
+# ST7735-MoodeCoverArt 
+
 *version = "0.0.1" 
 
 ### Features.
@@ -59,15 +60,13 @@ sudo pip3 install pyyaml
 ```
 Install the TFT driver.
 
-I have forked the Pimoroni driver and modified it to work with other ST7789 boards. Install it with the following command:
-
 ```
 sudo pip3 install ST7735
 ```
 
 ***Ensure 'Metadata file' is turned on in Moode System Configuration***
 
-### Install the TFT-MoodeCoverArt script
+### Install the ST7735-MoodeCoverArt script
 
 ```
 cd /home/pi
@@ -93,7 +92,7 @@ chmod 777 *.sh
 Test the script:
 
 ```
-python3 /home/pi/ST7735-MoodeCoverArt/tft_moode_coverart.py
+python3 /home/pi/ST7735-MoodeCoverArt/ST7735.py
 
 
 Ctrl-c to quit
