@@ -1,18 +1,18 @@
 #!/bin/bash
 
-echo -e "Install TFT-MoodeCoverArt Service. \n"
-cd /home/pi/TFT-MoodeCoverArt
+echo -e "Install ST7735-MoodeCoverArt Service. \n"
+cd /home/pi/ST7735-MoodeCoverArt
 
 while true
 do
-    read -p "Do you wish to install TFT-MoodeCoverArt as a service?" yn
+    read -p "Do you wish to install ST7735-MoodeCoverArt as a service?" yn
     case $yn in
         [Yy]* ) echo -e "Installing Service \n"
-                sudo cp tft-moodecoverart.service /lib/systemd/system
-                sudo chmod 644 /lib/systemd/system/tft-moodecoverart.service
+                sudo cp ST7735-moodecoverart.service /lib/systemd/system
+                sudo chmod 644 /lib/systemd/system/ST7735-moodecoverart.service
                 sudo systemctl daemon-reload
-                sudo systemctl enable tft-moodecoverart.service
-				echo -e "\nTFT-MoodeCoverArt installed as a service.\n"
+                sudo systemctl enable ST7735-moodecoverart.service
+				echo -e "\ST7735-MoodeCoverArt installed as a service.\n"
                 echo -e "Please reboot the Raspberry Pi.\n"
                 break;;
         [Nn]* ) echo -e "Service not installed \n"; break;;
@@ -33,4 +33,4 @@ do
     esac
 done
 
-echo "TFT-MoodeCoverArt install complete"
+echo "ST7735-MoodeCoverArt install complete"
