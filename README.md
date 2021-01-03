@@ -14,8 +14,6 @@ Metadata displayed:
 * Album/Radio Station
 * Title
 
-Overlays with a Time bar, Volume bar and Play/Pause, Next and Volume icons to match the Pirate Audio buttons are optional.
-
 There is also an option in config.yml to not display metadata
 
 The script has a built in test to see if the mpd service is running. This should allow enough delay when 
@@ -34,6 +32,8 @@ Metadata will only be displayed for Radio Stations and the Library.
 For the `Airplay`, `Spotify`, `Bluetooth`, `Squeezelite` and `Dac Input` renderers, different backgrounds will display.
 
 The overlay colours adjust for light and dark artwork, but can be hard to read with some artwork.
+
+Shadow text is also optional.
 
 The script does not search online for artwork
 
