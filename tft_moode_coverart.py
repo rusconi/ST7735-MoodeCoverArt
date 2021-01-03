@@ -10,7 +10,6 @@ from mediafile import MediaFile
 from io import BytesIO
 from numpy import mean 
 import ST7735
-import ST7789
 from PIL import ImageFilter
 import yaml
 
@@ -24,8 +23,8 @@ script_path = os.path.dirname(os.path.abspath( __file__ ))
 # set script path as current directory - 
 os.chdir(script_path)
 
-MODE=0
-OVERLAY=2
+
+OVERLAY=0
 TIMEBAR=1
 BLANK=0
 SHADE=0
@@ -39,7 +38,6 @@ if path.exists(confile):
         data = yaml.load(config_file, Loader=yaml.FullLoader)
         displayConf = data['display']
         OVERLAY = displayConf['overlay']
-        MODE = displayConf['mode']
         TIMEBAR = displayConf['timebar']
         BLANK = displayConf['blank']
         SHADE = displayConf['shadow']
@@ -47,27 +45,6 @@ if path.exists(confile):
 
 
      
-# Standard SPI connections for ST7789
-# Create ST7789 LCD display class.
-#if MODE == 3:    
-#    disp = ST7789.ST7789(
-#        port=0,
-#        cs=ST7789.BG_SPI_CS_FRONT,  # GPIO 8, Physical pin 24
-#        dc=9,
-#        rst=22,
-#       backlight=13,               
-#        mode=3,
-#        rotation=0,
-#        spi_speed_hz=80 * 1000 * 1000
-#    )   
-#else:   
-#    disp = ST7789.ST7789(
-#        port=0,
-#        cs=ST7789.BG_SPI_CS_FRONT,  # GPIO 8, Physical pin 24 
-#        dc=9,
-#        backlight=13,               
-#        spi_speed_hz=80 * 1000 * 1000
-#    )
 
 # Create ST7735 LCD display class. If using ST7789, delete the st7735 coding. then uncomment the ST7789
     disp = ST7735.ST7735(
@@ -78,7 +55,7 @@ if path.exists(confile):
         rst=22,
         width=128,
         height=160,
-        rotation=90,
+        rotation=270,
         invert=False,
         spi_speed_hz=4000000
     )
@@ -89,27 +66,19 @@ disp.begin()
 
 WIDTH = 160
 HEIGHT = 128
-font_s = ImageFont.truetype(script_path + '/fonts/Roboto-Medium.ttf',20)
-font_m = ImageFont.truetype(script_path + '/fonts/Roboto-Medium.ttf',24)
-font_l = ImageFont.truetype(script_path + '/fonts/Roboto-Medium.ttf',30)
+font_s = ImageFont.truetype(script_path + '/fonts/Roboto-Medium.ttf',16)
+font_m = ImageFont.truetype(script_path + '/fonts/Roboto-Medium.ttf',18)
+font_l = ImageFont.truetype(script_path + '/fonts/Roboto-Medium.ttf',20)
 
 
-img = Image.new('RGB', (240, 240), color=(0, 0, 0, 25))
+img = Image.new('RGB', (160, 128), color=(0, 0, 0, 25))
 
-play_icons = Image.open(script_path + '/images/controls-play.png').resize((240,240), resample=Image.LANCZOS).convert("RGBA")
-play_icons_dark = Image.open(script_path + '/images/controls-play-dark.png').resize((240,240), resample=Image.LANCZOS).convert("RGBA")
 
-pause_icons = Image.open(script_path + '/images/controls-pause.png').resize((240,240), resample=Image.LANCZOS).convert("RGBA")
-pause_icons_dark = Image.open(script_path + '/images/controls-pause-dark.png').resize((240,240), resample=Image.LANCZOS).convert("RGBA")
-
-vol_icons = Image.open(script_path + '/images/controls-vol.png').resize((240,240), resample=Image.LANCZOS).convert("RGBA")
-vol_icons_dark = Image.open(script_path + '/images/controls-vol-dark.png').resize((240,240), resample=Image.LANCZOS).convert("RGBA")
-
-bt_back = Image.open(script_path + '/images/bta.png').resize((240,240), resample=Image.LANCZOS).convert("RGBA")
-ap_back = Image.open(script_path + '/images/airplay.png').resize((240,240), resample=Image.LANCZOS).convert("RGBA")
-jp_back = Image.open(script_path + '/images/jack.png').resize((240,240), resample=Image.LANCZOS).convert("RGBA")
-sp_back = Image.open(script_path + '/images/spotify.png').resize((240,240), resample=Image.LANCZOS).convert("RGBA")
-sq_back = Image.open(script_path + '/images/squeeze.png').resize((240,240), resample=Image.LANCZOS).convert("RGBA")
+bt_back = Image.open(script_path + '/images/bta.png').resize((160,160), resample=Image.LANCZOS).convert("RGBA")
+ap_back = Image.open(script_path + '/images/airplay.png').resize((160,160), resample=Image.LANCZOS).convert("RGBA")
+jp_back = Image.open(script_path + '/images/jack.png').resize((160,160), resample=Image.LANCZOS).convert("RGBA")
+sp_back = Image.open(script_path + '/images/spotify.png').resize((160,160), resample=Image.LANCZOS).convert("RGBA")
+sq_back = Image.open(script_path + '/images/squeeze.png').resize((160,160), resample=Image.LANCZOS).convert("RGBA")
 
 draw = ImageDraw.Draw(img, 'RGBA')
 
@@ -234,9 +203,9 @@ def main():
     x1 = 20
     x2 = 20
     x3 = 20
-    title_top = 105
+    title_top = 85
     volume_top = 184
-    time_top = 222
+    time_top = 112
     act_mpd = isServiceActive('mpd')
     SHADE = displayConf['shadow']
 
@@ -258,9 +227,11 @@ def main():
                 
                 mn = 50
                 if OVERLAY == 3:
-                    img.paste(cover.resize((WIDTH,HEIGHT), Image.LANCZOS).convert('RGB'))
+                    img.paste(cover.resize((180,180), Image.LANCZOS).filter(ImageFilter.GaussianBlur).convert('RGB'),(-10,-26))
+                    img.paste(cover.resize((128,128), Image.LANCZOS).convert('RGB'),(16,0))
                 else:
-                    img.paste(cover.resize((WIDTH,HEIGHT), Image.LANCZOS).filter(ImageFilter.GaussianBlur).convert('RGB'))
+                    img.paste(cover.resize((180,180), Image.LANCZOS).filter(ImageFilter.GaussianBlur).convert('RGB'),(-10,-26))
+                    img.paste(cover.resize((128,128), Image.LANCZOS).filter(ImageFilter.GaussianBlur).convert('RGB'),(16,0))
                 
                 if 'state' in mpd_status:
                     if (mpd_status['state'] == 'stop') and (BLANK != 0):
@@ -293,34 +264,7 @@ def main():
                 
                 if (moode_meta['source'] == 'library') or (moode_meta['source'] == 'radio'):
 
-                    if (OVERLAY > 0) and (OVERLAY < 3):
-                        if 'state' in mpd_status:
-                            if OVERLAY == 2:
-                                if mpd_status['state'] != 'play':
-                                    if dark is False:
-                                        img.paste(pause_icons, (0,0), pause_icons)
-                                    else:
-                                        img.paste(pause_icons_dark, (0,0), pause_icons_dark)
-                                else:
-                                    if dark is False:
-                                        img.paste(play_icons, (0,0), play_icons)
-                                    else:
-                                        img.paste(play_icons_dark, (0,0), play_icons_dark)
-                            elif OVERLAY == 1:
-                                if dark is False:
-                                    img.paste(vol_icons, (0,0), vol_icons)
-                                else:
-                                    img.paste(vol_icons_dark, (0,0), vol_icons_dark)
-                            
-                        else:
-                            img.paste(play_icons, (0,0), play_icons)
-    
-                        if 'volume' in mpd_status:
-                            vol = int(mpd_status['volume'])
-                            vol_x = int((vol/100)*(WIDTH - 33))
-                            draw.rectangle((5, volume_top, WIDTH-34, volume_top+8), (255,255,255,145))
-                            draw.rectangle((5, volume_top, vol_x, volume_top+8), bar_col)
-                    
+
                     if OVERLAY < 3:    
                         if TIMEBAR == 1:
                             if 'elapsed' in  mpd_status:
@@ -328,11 +272,11 @@ def main():
                                 if 'duration' in mpd_status:
                                     du_time = int(float(mpd_status['duration']))
                                     dur_x = int((el_time/du_time)*(WIDTH-10))
-                                    draw.rectangle((5, time_top, WIDTH-5, time_top + 12), (255,255,255,145))
-                                    draw.rectangle((5, time_top, dur_x, time_top + 12), bar_col)
+                                    draw.rectangle((5, time_top, WIDTH-5, time_top + 8), (255,255,255,145))
+                                    draw.rectangle((5, time_top, dur_x, time_top + 8), bar_col)
         
                         
-                        top = 7
+                        top = 2
                         if 'artist' in moode_meta:
                             w1, y1 = draw.textsize(moode_meta['artist'], font_m)
                             x1 = x1-20
@@ -395,7 +339,7 @@ def main():
 
         client.disconnect()
     else:
-        draw.rectangle((0,0,240,240), fill=(0,0,0))
+        draw.rectangle((0,0,160,160), fill=(0,0,0))
         txt = 'MPD not Active!\nEnsure MPD is running\nThen restart script'
         mlw, mlh = draw.multiline_textsize(txt, font=font_m, spacing=4)
         draw.multiline_text(((WIDTH-mlw)//2, 20), txt, fill=(255,255,255), font=font_m, spacing=4, align="center")
