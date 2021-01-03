@@ -1,5 +1,5 @@
 #!/bin/bash
-
+ 
 echo -e "Install ST7735-MoodeCoverArt Service. \n"
 cd /home/pi/ST7735-MoodeCoverArt
 
