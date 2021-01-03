@@ -1,5 +1,4 @@
 
-
 import ST7735
 from PIL import Image, ImageDraw
 from os import path
