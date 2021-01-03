@@ -1,6 +1,5 @@
 # TFT-MoodeCoverArt 
-*version = "0.0.1" : changes*
-
+*version = "0.0.1" 
 
 ### Features.
 
