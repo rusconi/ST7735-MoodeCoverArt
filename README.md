@@ -1,28 +1,6 @@
 # TFT-MoodeCoverArt 
-*version = "0.0.5" : changes*
+*version = "0.0.1" : changes*
 
-* added option for text shadow
-
-*version = "0.0.5" : changes*
-
-* radio icons location changed
-
-*version = "0.0.4" : changes*
-
-* added option to display cover art only without overlays (see config file for instructions)
-
-*version = "0.0.3" : changes*
-
-* added option to turn off backlight when mpd state = stop (see config file for instructions)
-
--------------------------------------------------------
-
-
-Based on the look of the pirate audio plugin for mopidy.
-
-Works with Pimoroni pirate audio boards with 240*240 TFT (ST7789), as well as standalone ST7789 boards.
-
-![Sample Image](/pics/display.jpg)
 
 ### Features.
 
@@ -66,12 +44,6 @@ The script does not search online for artwork
 
 **Your moode installation works and produces audio**
 
-If your pirate audio board doesn't output anything
-
-Choose "Pimoroni pHAT DAC" or "HiFiBerry DAC" in moode audio config
-
-See the Installation section [**here**](https://github.com/pimoroni/pirate-audio) about gpio pin 25. 
-
 
 ### Preparation.
 
@@ -91,7 +63,7 @@ Install the TFT driver.
 I have forked the Pimoroni driver and modified it to work with other ST7789 boards. Install it with the following command:
 
 ```
-sudo pip3 install RPI-ST7789
+sudo pip3 install ST7735
 ```
 
 ***Ensure 'Metadata file' is turned on in Moode System Configuration***
@@ -100,16 +72,13 @@ sudo pip3 install RPI-ST7789
 
 ```
 cd /home/pi
-git clone https://github.com/rusconi/TFT-MoodeCoverArt.git
+git clone https://github.com/rusconi/ST7735-MoodeCoverArt.git
 ```
 
 ### Config File
 
-The default config should work with Pirate Audio boards
-
 The config.yml file can be edited to:
 
-* suit different ST7789 boards
 * set overlay display options
 * display the text with a shadow
 
@@ -125,7 +94,7 @@ chmod 777 *.sh
 Test the script:
 
 ```
-python3 /home/pi/TFT-MoodeCoverArt/tft_moode_coverart.py
+python3 /home/pi/ST7735-MoodeCoverArt/tft_moode_coverart.py
 
 
 Ctrl-c to quit
@@ -136,7 +105,7 @@ Ctrl-c to quit
 ### Install as a service.
 
 ```
-cd /home/pi/TFT-MoodeCoverArt
+cd /home/pi/ST7735-MoodeCoverArt
 ./install_service.sh
 ```
 
@@ -145,7 +114,22 @@ Follow the prompts.
 If you wish to remove the script as a service:
 
 ```
-cd /home/pi/TFT-MoodeCoverArt
+cd /home/pi/ST7735-MoodeCoverArt
 ./remove_service.sh
 ```
 
+***What to do if red and blue colours are reversed on the TFT.***
+
+This will be obvious as the stopped icon will be blue instead of red.
+
+I had to edit the '\_\_init\_\_.py' file of the st7735 driver as blue and red colours were reversed.  This is apparently common with some st7735 boards.
+
+Here's how:
+
+SSH into the rpi and...
+````
+sudo nano /usr/local/lib/python3.7/dist-packages/ST7735/__init__.py
+````
+locate the line that contains *`ST7735_MADCTL = 0x36`* and edit it to read *`ST7735_MADCTL = 0x00`*
+
+Save the file and restart the script and the colours should be correct.
