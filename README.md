@@ -51,7 +51,7 @@ The script does not search online for artwork
 
 Connect display as shown in this image
 
-![Connection Image](/pics/connection.jpg)
+![Connection Image](/pics/connections.jpg)
 
 **Enable SPI pn your RPI**
 
