@@ -329,9 +329,9 @@ def main():
             
             disp.display(img)
 
-            if c == 0:
-                im7 = img.save(script_path+'/dump.jpg')
-                c += 1
+            #if c == 0:
+            #    im7 = img.save(script_path+'/dump.jpg')
+            #    c += 1
 
 
             time.sleep(1)

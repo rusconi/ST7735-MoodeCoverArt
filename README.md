@@ -47,6 +47,12 @@ The script does not search online for artwork
 
 ### Preparation.
 
+**Connecting ST7735 Dsiplay**
+
+Connect display as shown in this image
+
+![Connection Image](/pics/connection.jpg)
+
 **Enable SPI pn your RPI**
 
 see [**Configuring SPI**](https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup/configuring-spi)
