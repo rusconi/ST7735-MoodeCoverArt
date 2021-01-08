@@ -1,4 +1,4 @@
-# version = "0.0.1"
+# version = "0.0.2"
 display:
   # Display control overlays:
   # 3=Artwork only
@@ -22,4 +22,8 @@ display:
   # shadow=n : n is the shadow pixel offset
   shadow: 1
 
+  # width of display
+  # dispwidth=128 for 128x128 screens
+  # dispwidth=160 for 160x128 screens
+  dispwidth: 160
 

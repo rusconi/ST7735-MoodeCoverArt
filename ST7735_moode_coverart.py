@@ -16,7 +16,10 @@ import yaml
 
 # set default config for pirate audio
 
-__version__ = "0.0.1"
+# V0.0.1 - initial version for 160x128 st7735
+# v0.0.2 - added option for 128x128 st7735
+
+__version__ = "0.0.2"
 
 # get the path of the script
 script_path = os.path.dirname(os.path.abspath( __file__ ))
@@ -28,6 +31,8 @@ OVERLAY=0
 TIMEBAR=1
 BLANK=0
 SHADE=0
+WIDTH=160
+HEIGHT=128
 
 confile = 'config.yml'
 
@@ -41,44 +46,43 @@ if path.exists(confile):
         TIMEBAR = displayConf['timebar']
         BLANK = displayConf['blank']
         SHADE = displayConf['shadow']
+        WIDTH = displayConf['dispwidth']
 
-
-
+#print(WIDTH)
      
 
 # Create ST7735 LCD display class. If using ST7789, delete the st7735 coding. then uncomment the ST7789
-    disp = ST7735.ST7735(
-        port=0,
-        cs=0,   #ST7735.BG_SPI_CS_FRONT,  # BG_SPI_CSB_BACK or BG_SPI_CS_FRONT
-        dc=9,
-        backlight=13,               
-        rst=22,
-        width=128,
-        height=160,
-        rotation=270,
-        invert=False,
-        spi_speed_hz=4000000
-    )
+disp = ST7735.ST7735(
+    port=0,
+    cs=0,   #ST7735.BG_SPI_CS_FRONT,  # BG_SPI_CSB_BACK or BG_SPI_CS_FRONT
+    dc=9,
+    backlight=13,               
+    rst=22,
+    width=128,
+    height=WIDTH,
+    rotation=270,
+    invert=False,
+    spi_speed_hz=4000000
+)
 
 # Initialize display.
 disp.begin()
 
+    
 
-WIDTH = 160
-HEIGHT = 128
 font_s = ImageFont.truetype(script_path + '/fonts/Roboto-Medium.ttf',16)
 font_m = ImageFont.truetype(script_path + '/fonts/Roboto-Medium.ttf',18)
 font_l = ImageFont.truetype(script_path + '/fonts/Roboto-Medium.ttf',20)
 
 
-img = Image.new('RGB', (160, 128), color=(0, 0, 0, 25))
+img = Image.new('RGB', (WIDTH, HEIGHT), color=(0, 0, 0, 25))
 
 
-bt_back = Image.open(script_path + '/images/bta.png').resize((160,160), resample=Image.LANCZOS).convert("RGBA")
-ap_back = Image.open(script_path + '/images/airplay.png').resize((160,160), resample=Image.LANCZOS).convert("RGBA")
-jp_back = Image.open(script_path + '/images/jack.png').resize((160,160), resample=Image.LANCZOS).convert("RGBA")
-sp_back = Image.open(script_path + '/images/spotify.png').resize((160,160), resample=Image.LANCZOS).convert("RGBA")
-sq_back = Image.open(script_path + '/images/squeeze.png').resize((160,160), resample=Image.LANCZOS).convert("RGBA")
+bt_back = Image.open(script_path + '/images/bta.png').resize((WIDTH,WIDTH), resample=Image.LANCZOS).convert("RGBA")
+ap_back = Image.open(script_path + '/images/airplay.png').resize((WIDTH,WIDTH), resample=Image.LANCZOS).convert("RGBA")
+jp_back = Image.open(script_path + '/images/jack.png').resize((WIDTH,WIDTH), resample=Image.LANCZOS).convert("RGBA")
+sp_back = Image.open(script_path + '/images/spotify.png').resize((WIDTH,WIDTH), resample=Image.LANCZOS).convert("RGBA")
+sq_back = Image.open(script_path + '/images/squeeze.png').resize((WIDTH,WIDTH), resample=Image.LANCZOS).convert("RGBA")
 
 draw = ImageDraw.Draw(img, 'RGBA')
 
@@ -226,12 +230,19 @@ def main():
 
                 
                 mn = 50
-                if OVERLAY == 3:
-                    img.paste(cover.resize((180,180), Image.LANCZOS).filter(ImageFilter.GaussianBlur).convert('RGB'),(-10,-26))
-                    img.paste(cover.resize((128,128), Image.LANCZOS).convert('RGB'),(16,0))
-                else:
-                    img.paste(cover.resize((180,180), Image.LANCZOS).filter(ImageFilter.GaussianBlur).convert('RGB'),(-10,-26))
-                    img.paste(cover.resize((128,128), Image.LANCZOS).filter(ImageFilter.GaussianBlur).convert('RGB'),(16,0))
+                if WIDTH == 160:
+                    if OVERLAY == 3:
+                        img.paste(cover.resize((180,180), Image.LANCZOS).filter(ImageFilter.GaussianBlur).convert('RGB'),(-10,-26))
+                        img.paste(cover.resize((128,128), Image.LANCZOS).convert('RGB'),(16,0))
+                    else:
+                        img.paste(cover.resize((180,180), Image.LANCZOS).filter(ImageFilter.GaussianBlur).convert('RGB'),(-10,-26))
+                        img.paste(cover.resize((128,128), Image.LANCZOS).filter(ImageFilter.GaussianBlur).convert('RGB'),(16,0))
+                elif WIDTH == 128:
+                    if OVERLAY == 0:
+                         img.paste(cover.resize((128,128), Image.LANCZOS).convert('RGB'),(0,0))
+                    else:
+                         img.paste(cover.resize((128,128), Image.LANCZOS).filter(ImageFilter.GaussianBlur).convert('RGB'),(0,0))
+                    
                 
                 if 'state' in mpd_status:
                     if (mpd_status['state'] == 'stop') and (BLANK != 0):
@@ -339,7 +350,7 @@ def main():
 
         client.disconnect()
     else:
-        draw.rectangle((0,0,160,160), fill=(0,0,0))
+        draw.rectangle((0,0,WIDTH,WIDTH), fill=(0,0,0))
         txt = 'MPD not Active!\nEnsure MPD is running\nThen restart script'
         mlw, mlh = draw.multiline_textsize(txt, font=font_m, spacing=4)
         draw.multiline_text(((WIDTH-mlw)//2, 20), txt, fill=(255,255,255), font=font_m, spacing=4, align="center")

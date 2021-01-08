@@ -1,6 +1,10 @@
 # ST7735-MoodeCoverArt 
 
-*version = "0.0.1" 
+*current version = "0.0.2"*
+   * *includes option for 128x128 ST7735 displays [see config file]*
+
+*old versions:*
+   * *"0.0.1" - for 160x128 ST7735 only*
 
 ### Features.
 
@@ -85,6 +89,7 @@ The config.yml file can be edited to:
 
 * set overlay display options
 * display the text with a shadow
+* choose display width: 160 for 160x128, or 128 for 128x128 pixel displays
 
 The comments in 'config.yml' should be self explanatory
 
